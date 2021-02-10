@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>快速上手</title>
+	<style type="text/css">
+		canvas {
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<div id="catCan">
+		<!-- 插canvas的地方 -->
+	</div>
+</body>
+<script type="text/javascript" src="catCanFrameWork3.0.0.js"></script>
+<script type="text/javascript" src="CatTool1.1.0.js"></script>
+<script type="text/javascript">
+	//写代码的地方↓
+	var ani = {
+		"width":128,
+		"height":128,
+		"pic":[
+			"parrot.jpg"
+		],
+		"img":[
+			[0,0,0,128,128],
+			[0,0,0,128,128]
+		],
+		"animation":[
+			[0,0,0,0,"drEll(40,10,-4,40,50);"],
+			[1,1,0,0,"drEll(40,10,4,80,50);"]
+		],
+		"playList":[
+			[10000,0,1],
+			[10000,1,0]
+		]
+	}
+	window.onload = function() {
+		var catCan = new CatCan("catCan",ani,"xy",{w:250,h:165,t:1},0);//只有前两个是必须的
+	}
+	//写代码的地方↑
+</script>
+</html>

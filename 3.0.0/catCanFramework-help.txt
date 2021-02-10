@@ -1,0 +1,242 @@
+结构:
+初始化:
+	CatCan(divId,animation):
+		概述:
+			构造方法,对猫罐头进行初始化
+		参数:
+			*divId(string):
+				添加canvas标签的div标签的id,div标签的内容将会被覆盖
+			*animation(object):
+				编写的动画对象,至少要包含width,height,img,animation,playList属性.详见"动画的编写"章节
+			"flag":
+				参数列表包含该字符串时会在每个图层的原点绘制一个5px*5px的像素点,并在控制台打印非警告类信息
+			"xy":
+				参数列表包含该字符串时,鼠标每次点击画板会在控制台打印坐标
+			{w,h,t}(object):
+				w与h是画板的宽度高度,默认使用配置文件中的宽度与高度;t(可选)是(相较于配置文件的)缩放比例,若不设置会根据w与h自动缩放
+			playNo(number):
+				初始化结束后将会播放的动画,可以置空并在之后使用play方法播放动画
+		示例:
+			var catCan = new CatCan("catCan",animation);//在id为catCan的div标签中创建画板,并导入animation作为动画对象
+			var catCan2 = new CatCan("catCan2",animation,"flag");//将会标出原点并在控制台打印提示信息
+			var catCan3 = new CatCan("catCan3",animation,{w:1800,h:900});//画板宽1800像素,高900像素,大小根据画板调整
+			var catCan4 = new CatCan("catCan4",animation,{w:1800,h:900,t:0.5});//上一个示例的基础上将图案尺寸调整为一半
+			var catCan5 = new CatCan("catCan5",animation,0);//加载完成后播放0号动画
+播放:
+	play():
+		概述:
+			(立即)播放动画
+		参数:
+			playNo(number):
+				即将播放的动画的序号;不加参数时会播放当前被暂停的动画
+		示例:
+			catCan.play(0);//播放序号为0的动画
+			catCan.play();//播放当前被暂停的动画(没有动画会报错)
+	---------------
+	pause():
+		概述:
+			暂停当前动画
+		参数:
+			无
+		示例:
+			catCan.pause();
+	---------------
+	reload():
+		概述:
+			初始化动画
+		参数:
+			无
+		示例:
+			catCan.reload();
+	---------------
+	next():
+		概述:
+			播放队列中下一个动画,如果没有则播放当前动画
+		参数:
+			无
+		示例:
+			catCan.next();
+队列控制:
+	push(data):
+		概述:
+			向末尾追加动画,返回队列中动画个数
+		参数:
+			*data(object):
+				即将播放的动画,可以包含一系列参数,详见"动画的编写"
+			max:
+				队列中允许缓存的动画上限(max>=1,且n为整数),队列内动画数超过上限时会顶替最前面的动画
+		示例:
+			catCan.push(data);//将动画添加到队列末尾
+			catCan.push(data,10);//将动画添加到队列末尾,如果队列中的动画超过十个则删除第一个
+响应器:
+	addListener(listener,fun):
+		概述:
+			为画板添加一个鼠标响应器,通过监听鼠标对listener的动作来控制画板.同一个listener建议只绑定一次响应器
+		参数:
+			*listener(/*string||标签*/):
+				需要被添加鼠标动作监听器的对象,如果是字符串则会以该字符串作为id查找对象*
+			*fun(function):	
+				执行的回调函数,回调函数的参数为包含如下五个属性与若干函数的对象:*
+					1)cx(number类型):相对于canvas左上角坐标的x值
+					2)cy(number类型):相对于canvas左上角坐标的y值
+					3)x(number类型):相对于listener左上角坐标的x值
+					4)y(number类型):相对于listener左上角坐标的y值
+					5)event(string类型):左键正在执行的动作,解释如下:
+						"drag":拖动
+						"move":移动
+						"down":按下
+						"up":抬起
+					函数列表:
+						drag(listNo,aniNo):该图层可以拖动
+						click(listNo,aniNo,fun):该图层被点击后会执行回调函数
+						dblclick(listNo,aniNo,fun):该图层被双击后会执行回调函数
+						inArea(listNo,aniNo,event):返回鼠标指针是否处于该图层上;event非空时会同时判断鼠标动作是否为event
+		示例:
+			catCan.addListener(catCan.canvas,function(mouse) {
+				mouse.drag(0,0);
+				mouse.dblclick(0,1,function() {
+					console.log(mouse.cx,mouse.event);
+				});
+			});//为catCan的canvas标签添加一个鼠标响应器,0号动画的图层0可以被鼠标拖动,双击0号动画图层1会显示鼠标相对于canvas左上角坐标的x值和当前的鼠标事件(双击的最后一个事件为抬起)
+			catCan.addListener(catCan.canvas,function(mouse) {
+				if(mouse.inArea(0,0,"move")) {
+					alert("碰到我了");
+				}
+			});//触碰到
+	---------------
+	getArea(listNo,aniNo):
+		概述:
+			获取图层的位置信息,包括left,top,width,height,right,bottom
+		参数:
+			*listener(number):
+				列表序号
+			*图层序号(number):
+				图层序号
+		示例:
+			catCan.getArea(0,0);//获取0号动画0号图层的位置信息
+			catCan.getArea(0,0).height;//获取0号动画0号图层的高度信息
+
+动画的编写
+reload*→	init*	getArea*→	addListener*	←push*
+			↑					↑
+			play→	←next*		inArea*			stop*
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+catCanFramework(猫罐头)-2.1.1帮助文档
+2019.2.25
+
+目录:
+1.序言与版本号说明
+2.COM体系结构
+3.catImg(图像对象)
+4.catAnimation(动画对象)
+4.1图层
+4.2catTform(六值变换)
+4.3catSc(纵横缩放)
+5.catCanvas(画板对象)
+6.catTools(工具类)
+7.快速上手
+8.History&Thanks
+
+1.序言与版本号说明
+catCanFramework(猫罐头)是设计用于前端canvas标签javascript代码简易实现的试做框架,我们尝试让网页制作人员更容易地使用canvas标签制作类似博客看板娘一样的效果.我们能力尚浅,因此该框架还存在逻辑不够简便,效率低下等问题.不过这只是试做版,我们在未来会尝试推出更为优秀的版本.
+版本号由三位数字构成:
+第一位表示大版本,它会在整个体系被推到重来时+1,新的大版本往往运行效率更高,逻辑更简单.
+第二位表示新功能的增加,每当添加新的部分时它会+1
+第三位表示bug的修复,如果某版本出现了问题但还能试着抢救一下的话它会+1.
+
+2.COM体系结构
+COM是catCanFramework Object Model(猫罐头对象模型)的缩写,整个体系主要由以下部分组成(缺一两个说不定也能用):
+catImg(图像对象),catAnimation(动画对象),catCanvas(画板对象),catTform(六值变形对象),catSc(纵横缩放对象)
+脉络大概是这样子的:
+catCanvas
+	├──catAnimation1
+	│	├─catImg
+	│	├─catTform(可选)
+	│	└─catSc(可选)
+	├──catAnimation2
+	└──catAnimation3
+其中catImg,catAnimation,catCanvas有单独的章节叙述,catTform与catSc将作为可选的部分并入catAnimation一章进行描述.
+
+3.catImg(图像对象)
+catImg是COM中最基础的组成部分,也是每个catAnimation必不可少的部分.catImg表示一个图像片段而不是一张图片,在实例中往往会将多个图像片段拼合在一张图片上,以便减少网站的请求次数.
+catImg的构造方法中有五个参数:
+图像所在图片的绝对路径或相对路径(字符串类型)src
+起始x坐标(数字类型,默认为0)x
+起始y坐标(数字类型,默认为0)y
+图像宽度(数字类型,默认为图片的宽度)width
+图像高度(数字类型,默认为图片的宽度)height
+如果你的每个图像分别占据一张图片,你可以在创建catImg对象时仅传入图片路径.
+小心,catImg的后四个参数只能同时选择或同时不选,否则在创建catAnimation对象的时候容易出现不可控后果.
+
+4.catAnimation(动画对象)
+catAnimation是COM的核心部分,正如第二节中脉络图示意的那样,每个catCanvas包含多个catAnimation;每个catAnimation包含一个catImg,包含零或一个catTform,包含零或一个catSc.
+catAnimation的构造方法中有八个参数:
+向上的图层数量(数字类型)restoreTime
+构成动画的图像(catImg类型)catmage
+初始水平移动的像素(数字类型,默认为0)tx
+初始竖直移动的像素(数字类型,默认为1)ty
+初始顺时针旋转的角度(数字类型,默认为0)angle
+每次绘制图层前需要运行的函数(函数类型)func
+六值变换对象(catTform类型)tform
+纵横缩放对象(catSc)sc
+每个动画对象分别对应一个图层,设置了func参数就是动画,反之就是静画.图层,catTform,catSc的相关的概念请阅读接下来的小节.
+
+4.1图层
+猫罐头的绘制过程是这样的:
+清空画板,运行图层1的函数,绘制图层1,运行图层2的函数,在上方绘制图层2,运行图层3的函数,在上方绘制图层3...,清空画板,之后不断重复这个过程.因为这些函数不断地移动与旋转图层,对图层做变形处理,才使得每一帧有不同的变化,让静画动起来.
+每个图层对应一个catAnimation对象,太多图层或许会让你整个前端界面boom掉.
+
+4.2catTform(六值变换)
+catTform是catAnimation的一个可选部分,它的构造函数共六个值,abcdef,默认值是100100
+
+失去梦想后突然不想写了,不过框架实实在在的能用了,也完全符合预期,东西放在群里,需要自取
+
+1.2.1更新日志(2019.8.25)
+1)略微调整了drawAxis方法(新命名),使代码格式更规范
+2)重写了addListener方法(新命名),使代码格式更规范
+3)调整了catCanvas的构造方法可选参数的获取方式,现在通过字符串类型获取,如:
+	var c1 = new CatCanvas("axis","debug");//设置显示关节,设置显示位置坐标
+4)将catImg,catAnimation,catTform,catSc方法归在catCanvas.prototype下
+5)定义:
+	var catCan = catCanvas.prototype;
+以方便用户使用以及压缩体积
+6)重新规定了动画创建顺序,现在可以将除图片对象的全部代码定义在同一个函数中
+7)将catTools工具类归在catCanvas.prototype下,并定义:
+	var CatTools = CatCan.catTools.prototype;
+以方便用户使用以及压缩体积
+8)修复响应对象和canvas对象不一致时鼠标动作不会响应的问题,假如现在有CatCanvas对象c1,现在可以使用类似于:
+	c1.init("CatCanvas","body");
+的语句使特定对象响应鼠标在id为"body"的对象上做出按下,移动,抬起,离开的动作
+
+1.2.2更新日志(2019.8.27)
+修复了画板坐标系不随canvas的width与height变化的bug
+相互协调重构了addListener方法和工具类下的mouseMove方法,现在可以让多个canvas画板以不同的方式响应同一个事件了
+修复了1.2.1版本更新日志中版本号错误的写成了2.1.1的问题
+
+2.0.0更新日志(2020.2.18)

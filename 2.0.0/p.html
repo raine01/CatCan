@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+
+ctx.save();
+
+ctx.transform(0.707,1,-1,0.707,100,100);
+ctx.fillStyle="red";
+ctx.fillRect(0,0,100,100);
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="yellow";
+ctx.fillRect(0,0,100,100);
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="blue";
+ctx.fillRect(0,0,100,100);
+
+ctx.restore();
+//////////////////////////////////////////////
+/*ctx.save();
+
+ctx.transform(1,0,0,1,0,100);
+ctx.fillStyle="orange";
+ctx.fillRect(0,0,100,100)
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="green";
+ctx.fillRect(0,0,100,100);
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="black";
+ctx.fillRect(0,0,100,100);
+ctx.restore();*/
+//////////////////////////////////////////////
+ctx.save();
+
+ctx.transform(1,0,0,1,0,200);
+ctx.fillStyle="red";
+ctx.fillRect(0,0,100,100);
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="yellow";
+ctx.fillRect(0,0,100,100);
+
+ctx.transform(1,0,0,1,100,0);
+ctx.fillStyle="blue";
+ctx.fillRect(0,0,100,100);
+
+ctx.restore();
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>尝试</title>
+	<style type="text/css">
+		canvas {
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<div id="catCan">
+		<!-- 插canvas的地方 -->
+	</div>
+</body>
+<script type="text/javascript" src="catCanFrameWork2.1.1.js"></script>
+<script type="text/javascript" src="catCanTool1.1.0.js"></script>
+<script type="text/javascript">
+	window.onload = function () {
+		var url = "data.json"
+		var request = new XMLHttpRequest();
+		request.open("get", url);
+		request.send(null);
+		request.onload = function () {
+			if (request.status == 200) {
+				var json = JSON.parse(request.responseText);
+				///////////////////////////////////////////////////////////////////
+				var catCan = new CatCan();
+				catCan.init("catCan",json,"xy",{w:1800,h:900,t:0.5},0);//只有前两个是必须的
+				/*catCan.pause();
+				catCan.play();*/
+				catCan.addListener(catCan.canvas,function(mouse) {
+					/*if(mouse.inArea(0,0,"move")) {
+						alert("碰到我了");
+					}*/
+					if(mouse.inArea(0,0,"down")) {
+						console.log("碰到0了");
+					}if(mouse.inArea(0,1,"down")) {
+						console.log("碰到1了");
+					}if(mouse.inArea(0,2,"down")) {
+						console.log("碰到2了");
+					}
+				});
+				//setTimeout(function(){catCan.reload()},10000);
+				//////////////////////////////////////////////////////////////////
+			}
+		}
+	}
+</script>
+</html>
