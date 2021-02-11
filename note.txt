@@ -2,7 +2,7 @@
 git add .
 //添加备注
 git commit -m "备注"
-//推到分支
+//推到dev分支
 git push origin dev
 
 //合并分支
