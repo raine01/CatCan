@@ -243,7 +243,8 @@ reload*→	init*	getArea*→	addListener*	←push*
  
 
 
-
+3.1.1更新日志(2021.2.11)
+修复了getArea()方法y轴数值反转的问题(正负相反)
 
 
 
