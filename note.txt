@@ -1,0 +1,12 @@
+//添加到缓存
+git add .
+//添加备注
+git commit -m "备注"
+//推到分支
+git push origin dev
+
+//合并分支
+//切换到主分支
+git checkout master
+//合并dev的部分文件到当前分支(3.1.1是文件夹)
+git checkout dev 3.1.1/
