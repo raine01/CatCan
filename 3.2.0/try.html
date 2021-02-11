@@ -22,15 +22,26 @@
 <script type="text/javascript" src="../CatTool1.1.1.js"></script>
 <script type="text/javascript" src="jsonCan.js"></script>
 <script type="text/javascript">
+	var m=5,n=8;
 	window.onload = function () {
-		makeJsonCan("picture.jpg",5,8,init);
+		makeJsonCan("picture.jpg",m,n,init);
 	};
 	function init(json) {
+		var hide = json.hide;
 		var catCan = new CatCan("catCan",json,"flag",0);//只有前两个是必须的
 		catCan.addListener(catCan.canvas,function(mouse) {
 			for(var i=0;i<40;i++) {
 				mouse.click(0,i,function() {
-					console.log(i+"被点击了");
+					if(hide==i-1||hide==i+1
+						||hide==i-n||hide==i+n) {
+						console.log("空白块为"+i);
+						var tmp = catCan.catTreePlay[0].ani[i+1][1];//三行图层的img
+						catCan.catTreePlay[0].ani[i+1][1] = catCan.catTreePlay[0].ani[hide+1][1];
+						catCan.catTreePlay[0].ani[hide+1][1] = tmp;
+						tmp = hide;//三行角标
+						hide = i;
+						i = tmp;
+					}
 				});
 			}
 		});
