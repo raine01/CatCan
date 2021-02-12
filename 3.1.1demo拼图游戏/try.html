@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>尝试</title>
+	<style type="text/css">
+		canvas {
+			border: 1px solid black;
+		}
+		div {
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	单击与空白方块相邻的方块可以移动该方块<br>
+	双击任意方块可以将其移动到空白处<br>
+	点击按钮可以将拼图恢复到初始状态<br>
+	打乱顺序请按键盘F5<br>
+	向下滚动查看原图
+	<button onclick="reload();">重新载入</button><br>
+	<div id="catCan">
+		<!-- 插canvas的地方 -->
+	</div>
+	<div>
+	<img src="picture.jpg">
+	</div>
+</body>
+<script type="text/javascript" src="catCanFrameWork3.1.1.js"></script>
+<script type="text/javascript" src="../CatTool1.1.1.js"></script>
+<script type="text/javascript" src="jsonCan.js"></script>
+<script type="text/javascript">
+	var m=5,n=8;
+	window.onload = function() {
+		makeJsonCan("picture.jpg",m,n,init);
+	};
+	function reload() {
+		hide = jsonHide;
+		catCan.reload();
+	};
+	function init(json) {
+		jsonHide = json.hide;
+		hide = jsonHide;
+		catCan = new CatCan("catCan",json,0);//载入图片,载入动画对象,播放0号动画
+		catCan.addListener(catCan.canvas,function(mouse) {
+			for(var i=0;i<40;i++) {
+				mouse.click(0,i,function() {//给四十个动画附加单击动作
+					if(hide==i-1||hide==i+1||hide==i-n||hide==i+n) {
+						var tmp = catCan.catTreePlay[0].ani[i+1][1];//三行图层的img
+						catCan.catTreePlay[0].ani[i+1][1] = catCan.catTreePlay[0].ani[hide+1][1];
+						catCan.catTreePlay[0].ani[hide+1][1] = tmp;
+						tmp = hide;//三行角标
+						hide = i;
+						i = tmp;
+					}
+				});
+				mouse.dblclick(0,i,function(){//给四十个动画附加双击动作
+					var tmp = catCan.catTreePlay[0].ani[i+1][1];//三行图层的img
+					catCan.catTreePlay[0].ani[i+1][1] = catCan.catTreePlay[0].ani[hide+1][1];
+					catCan.catTreePlay[0].ani[hide+1][1] = tmp;
+					tmp = hide;//三行角标
+					hide = i;
+					i = tmp;
+				});
+			}
+		});
+	};
+</script>
+</html>
