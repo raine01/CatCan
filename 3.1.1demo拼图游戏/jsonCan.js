@@ -18,21 +18,27 @@ function makeJsonCan(picture,m,n,fun) {
 		jsonCan.height = img.naturalHeight;
 		jsonCan.pic = [picture];
 		jsonCan.img = [];
-		for(var j=0;j<m;j++) {
-			for(var i=0;i<n;i++) {
-				if(hide==n*j+i) {
-					console.log("隐藏的是"+hide);
-					jsonCan.img.push([0,img.naturalWidth,img.naturalHeight,w,h]);
-				} else {
-					jsonCan.img.push([0,w*i,h*j,w,h]);
-				}
+		var imgs = [];
+		for(var i=0;i<m*n;i++) {
+			imgs[i] = i;
+		}
+		imgs.sort(function(){
+			return Math.random()-0.5;
+		});
+		for(var mn=0;mn<imgs.length;mn++) {
+			var j = parseInt(imgs[mn]/n),i = parseInt(imgs[mn]%n);
+			if(hide==mn) {
+				jsonCan.img.push([0,img.naturalWidth,img.naturalHeight,w,h]);
+			} else {
+				jsonCan.img.push([0,w*i,h*j,w,h]);
 			}
 		}
 		jsonCan.animation = [];
+		//把动画放入动画列表
 		for(var j=0;j<m;j++) {
 			for(var i=0;i<n;i++) {
 				if(i==0&&j==0) jsonCan.animation.push([0,j*8+i,w*i,h*j]);
-				else jsonCan.animation.push([1,j*8+i,w*i,h*j]);
+				else jsonCan.animation.push([0,j*8+i,w*i,h*j]);
 			}
 		}
 		jsonCan.playList = [];
