@@ -35,7 +35,10 @@ CatTool.moveOnFloor = function(para,ani,ctx,ds) {
 	/*
 		参数:
 		1.移动的速度,0为静止(默认5)
-		2.是否可以横向离开"地面"(默认可以)
+		2.是否可以横向离开平面
+			0表示可以离开所有平面
+			1表示可以离开当前地面但是不允许离开下方最辽阔的平面
+			2表示不允许离开当前平面
 		根数据域占用:
 			map只读不写,格式如下(按x1从小到大排序):
 			[
@@ -48,8 +51,9 @@ CatTool.moveOnFloor = function(para,ani,ctx,ds) {
 			data:(表示当前正在做什么动作)
 				空字符串/left/right/up/down
 	*/
-	var speed = para[0]||5;//默认速度为5
-	var leave = para[1]||true;//默认可以横向离开平面
+	var speed = parseInt(para[0])||5;//默认速度为5
+	var leave = parseInt(para[1])||0;//默认可以横向离开所有平面,不允许离开所有地面
+	var w=ani.dx-ani.tx,h=ani.dy-ani.ty;
 	var data = {
 		action:""
 	};
@@ -67,9 +71,12 @@ CatTool.moveOnFloor = function(para,ani,ctx,ds) {
 			if(mayFloor[i][0]<l)l=mayFloor[i][0];//寻找脚下所有地板的左边界
 			if(mayFloor[i][1]>r)r=mayFloor[i][1];//寻找脚下所有地板的右边界
 		}
-		if(realFloor[2]>ani.ty){
+		if(realFloor[2]-speed>ani.ty){
 			ani.ty+=speed;
 			ani.dy+=speed;
+		} else {
+			ani.ty=realFloor[2];
+			ani.dy=realFloor[2]+h;
 		}
 		//jump
 		if(data.action.indexOf('jump')!=-1){
@@ -78,15 +85,27 @@ CatTool.moveOnFloor = function(para,ani,ctx,ds) {
 			ani.dy-=jumpSpeed;
 		}
 		//left
-		if(leave||ani.tx>l){
-			if(data.action.indexOf('left')!=-1){
+		if(data.action.indexOf('left')!=-1){
+			if(leave==1&&ani.tx-speed<l) {
+				ani.tx=l;
+				ani.dx=l+w;
+			} else if(leave==2&&ani.tx-speed<realFloor[0]) {
+				ani.tx=realFloor[0];
+				ani.dx=realFloor[0]+w;
+			} else {
 				ani.tx-=speed;
 				ani.dx-=speed;
 			}
-		}
+		} 
 		//right
-		if(leave||this[6]<r){
-			if(data.action.indexOf('right')!=-1){
+		if(data.action.indexOf('right')!=-1){
+			if(leave==1&&ani.tx+speed>r) {
+				ani.tx=r;
+				ani.dx=r+w;
+			} else if(leave==2&&ani.tx+speed>realFloor[1]) {
+				ani.tx=realFloor[1];
+				ani.dx=realFloor[1]+w;
+			} else {
 				ani.tx+=speed;
 				ani.dx+=speed;
 			}
