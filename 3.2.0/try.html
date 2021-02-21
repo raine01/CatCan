@@ -22,141 +22,57 @@
 <script type="text/javascript">
 	window.onload = function() {
 		var catCan = new CatCan("catCan",dataJson,"flag","xy");
-
-		//drGroUndDs
-		//var drGroUndDs = catCan.queryDS("drGroUnd",1);
-		//drGroUndDs.push([300,800,300]);
-		//console.log(drGroUndDs);
-
-		//floorDs
-		var moveOnFloorDs = catCan.queryDS("moveOnFloor",1);
-		//console.log(floorDs);
-		//floorDs.floor.push([300,800,50]);
-		//floorDs.floor.push([300,800,300]);
-		var g = [//按x1从小到大排序
+		//地板地图
+		var mapGround = [//地图,按x1从小到大排序
 			[30,1330,760],
 			[150,550,300],
 			[210,800,140],
-			[370,800,100]
+			[370,800,100],
+			[600,1100,400]
 		];
-		/*for(var i in g) {//赋值
-			drGroUndDs.push(g[i]);
-			floorDs.floor.push(g[i]);
-		}*/
 		var map = catCan.dataSpace.map = [];
-		for(var i in g) {//赋值
-			/*drGroUndDs.push(g[i]);
-			floorDs.floor.push(g[i]);*/
-			map.push(g[i]);
+		for(var i in mapGround) {//赋值
+			map.push(mapGround[i]);
 		}
-		document.onkeydown = keydown;//注册keydown事件处理函数
-		//document.onkeyup = f;//注册keyup事件处理函数
-		document.onkeyup = keyup;//注册keyup事件处理函数
-		//document.onkeypress = keydown;//注册keypress事件处理函数
-		function keydown(e) {
-			var event = e||window.event;//标准化事件处理
-			switch(event.keyCode){
-				case 87:
-					//alert("w");
-					moveOnFloorDs.action+="up";
-					moveOnFloorDs.action = moveOnFloorDs.action.replace(/(up){2,}/g,"up");
-					break;
-				case 65:
-					//alert("a");
-					moveOnFloorDs.action="left";
-					break;
-				case 68:
-					//alert("d");
-					moveOnFloorDs.action="right";
-					break;
-				case 83:
-					//alert("s");
-					moveOnFloorDs.action="down";
-					break;
-			}
-			//console.log(moveOnFloorDs.action);
-		};
-		function keyup(e) {
-			var event = e||window.event;//标准化事件处理
-			var beReplace = "";
-			switch(event.keyCode){
-				case 32:
-					//alert("space");
-					moveOnFloorDs.action+="jump";
-					setTimeout(function(){
-						moveOnFloorDs.action = moveOnFloorDs.action.replace("jump","");
-					},400);
-					break;
-				case 87:
-					//alert("w");
-					beReplace = /up/g;
-					break;
-				case 65:
-					//alert("a");
-					beReplace = /left/g;
-					break;
-				case 68:
-					//alert("d");
-					beReplace = /right/g;
-					break;
-				case 83:
-					//alert("s");
-					beReplace = /down/g;
-					break;
-			}
-			//console.log(floorDs.action,beReplace);
-			moveOnFloorDs.action = moveOnFloorDs.action.replace(beReplace,"");
-			console.log(moveOnFloorDs.action);
-		};
-		/*catCan.addListener("catCan",function(mouse){
-			mouse.click(1,1,function(){
-				floorDs.action="left";
-			});
-			mouse.dblclick(1,1,function(){
-				floorDs.action="up";
-			});
-		});*/
-
-
-		catCan.play(1);
-		//console.log(floorDs);
-		//floorDs.action="left";
-		//console.log(catCan.catCtx.parentCan);
+		catCan.play(0);
 	};
 	dataJson = {
-		"width":1366,
-		"height":768,
-		"pic":[
+		width:1366,
+		height:768,
+		pic:[
 			"2233.png"
 		],
-		"img":[
-			[0,0,0,1366,768],
+		img:[
 			[0,0,0,0,0],
-			[0,0,0,30,30]
+			[0,0,0,30,30],
+			[0,500,0,400,100]
 		],
-		"animation":[
-			{//一个长方形
-				"rt":0,
-				"ci":0,
-				"dx":0,
-				"dy":0
-			},{//地图
-				"ci":1,
-				"dx":300,
-				"dy":300,
-				"f":"drawFloor();"
+		animation:[
+			{//地图
+				ci:0,
+				dx:300,
+				dy:300,
+				f:"drawFloor();"
+			},{//状态栏
+				rt:1,
+				ci:0,
+				dx:450,
+				dy:650,
+				tx:450,
+				ty:650,
+				f:"showHp(50,100,20);"
 			},{//方块
-				"ci":2,
-				"dx":305,
-				"dy":20,
-				"tx":320,
-				"ty":50,
-				"f":"moveOnFloor(7,1);"
+				rt:1,
+				ci:1,
+				dx:305,
+				dy:20,
+				tx:320,
+				ty:50,
+				f:"moveOnFloor(7,1);"
 			}
 		],
-		"playList":[
-			[3000,0],
-			[3000,1,2]
+		playList:[
+			[3000,0,1,2]
 		]
 	};
 </script>
