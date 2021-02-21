@@ -22,6 +22,7 @@
 <script type="text/javascript">
 	window.onload = function() {
 		var catCan = new CatCan("catCan",dataJson,"flag","xy");
+
 		//地板地图
 		var mapGround = [//地图,按x1从小到大排序
 			[30,1330,760],
@@ -34,6 +35,20 @@
 		for(var i in mapGround) {//赋值
 			map.push(mapGround[i]);
 		}
+
+		//陷阱区域
+		var aboutHp = {
+			raine:[
+				[0,701,100,800,-0.1],
+				[0,601,100,700,0.1]
+			],
+			class2:[
+				[0,0,100,100,-0.1],
+				[100,0,200,100,-10]
+			]
+		};
+		catCan.dataSpace.aboutHp = aboutHp;
+
 		catCan.play(0);
 	};
 	dataJson = {
@@ -52,15 +67,15 @@
 				ci:0,
 				dx:300,
 				dy:300,
-				f:"drawFloor();"
+				f:"drawFloor();drawArea(raine);"
 			},{//状态栏
 				rt:1,
 				ci:0,
 				dx:450,
 				dy:650,
 				tx:450,
-				ty:650,
-				f:"showHp(50,100,20);"
+				ty:650/*,
+				f:"showHp(50,100,20);"*/
 			},{//方块
 				rt:1,
 				ci:1,
@@ -68,7 +83,8 @@
 				dy:20,
 				tx:320,
 				ty:50,
-				f:"moveOnFloor(7,1);"
+				f:"moveOnFloor(7,1);aboutHp(raine,30,-50,-70);"
+				//f:"moveOnFloor(7,1);aboutHp(raine);"
 			}
 		],
 		playList:[
