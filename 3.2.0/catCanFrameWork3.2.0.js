@@ -463,16 +463,24 @@ CatCan.prototype.getArea = function(listNo/*number*/,aniNo/*number*/) {//获取�
 CatCan.prototype.addKeyListener = function(fun/*function*/) {//键盘响应器
 	/*
 		参数:
-			需要执行的回调函数,包含如下信息:
+			执行的回调函数,包含如下两个参数:
 				1)type(string类型):keydown或keyup
 				2)key(string类型):按下的按键
 	*/
+	var oldGetKey = document.onkeydown;
+	var e = e||window.event;//标准化事件处理
+	if(oldGetKey!=null) {//如果已经有添加上
+		function getKey(e) {
+			fun(e.type,e.key);
+			oldGetKey(e);
+		};
+	} else {//如果没有就创建一个
+		function getKey(e) {
+			fun(e.type,e.key);
+		};
+	}
 	document.onkeydown = getKey;//注册keydown事件处理函数
 	document.onkeyup = getKey;//注册keyup事件处理函数
-	function getKey(e) {
-		var e = e||window.event;//标准化事件处理
-		fun(e.type,e.key);
-	};
 };
 
 /*

@@ -22,10 +22,9 @@
 <script type="text/javascript">
 	window.onload = function() {
 		var catCan = new CatCan("catCan",dataJson,"flag","xy");
-
 		//地板地图
 		var mapGround = [//地图,按x1从小到大排序
-			[30,1330,760],
+			[30,1230,560],
 			[150,550,300],
 			[210,800,140],
 			[370,800,100],
@@ -39,8 +38,8 @@
 		//陷阱区域
 		var aboutHp = {
 			raine:[
-				[0,701,100,800,-0.1],
-				[0,601,100,700,0.1]
+				[0,501,100,600,-0.1],
+				[100,501,200,600,0.1]
 			],
 			class2:[
 				[0,0,100,100,-0.1],
@@ -49,46 +48,56 @@
 		};
 		catCan.dataSpace.aboutHp = aboutHp;
 
+		//贴图列表
+		catCan.dataSpace.imgs = {
+			leftwait:[1,2],//左待机
+			leftmove:[3,4],//左走路
+			rightwait:[5,6],//右待机
+			rightmove:[7,8]//右走路
+		};
+		for(i in catCan.dataSpace.imgs) {
+			catCan.dataSpace.imgs[i].flag = 0;
+		}
+
 		catCan.play(0);
 	};
 	dataJson = {
-		width:1366,
-		height:768,
+		width:1300,
+		height:600,
 		pic:[
-			"2233.png"
+			"oulleft.png",
+			"oulright.png"
 		],
 		img:[
-			[0,0,0,0,0],
-			[0,0,0,30,30],
-			[0,500,0,400,100]
+			[0,0,0,0,0],//空
+			[0,0,0,60,60],//左待机1
+			[0,60,0,60,60],//左待机2
+			[0,0,60,60,60],//左走路1
+			[0,60,60,60,60],//左走路2
+			[1,0,0,60,60],//右待机1
+			[1,60,0,60,60],//右待机2
+			[1,0,60,60,60],//右走路1
+			[1,60,60,60,60],//右走路2
 		],
 		animation:[
 			{//地图
 				ci:0,
-				dx:300,
-				dy:300,
 				f:"drawFloor();drawArea(raine);"
 			},{//状态栏
 				rt:1,
 				ci:0,
-				dx:450,
-				dy:650,
-				tx:450,
-				ty:650/*,
-				f:"showHp(50,100,20);"*/
-			},{//方块
+			},{//角色
 				rt:1,
-				ci:1,
-				dx:305,
+				ci:5,
+				dx:290,
 				dy:20,
 				tx:320,
-				ty:50,
-				f:"moveOnFloor(7,1);aboutHp(raine,30,-50,-70);"
-				//f:"moveOnFloor(7,1);aboutHp(raine);"
+				ty:80,
+				f:"moveOnFloor(7,1);aboutHp(raine,30,-50,-90);changeImg(15);"
 			}
 		],
 		playList:[
-			[3000,0,1,2]
+			[3000,0,2]
 		]
 	};
 </script>

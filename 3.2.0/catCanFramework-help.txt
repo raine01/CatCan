@@ -75,7 +75,7 @@
 		参数:
 			*listener(string||标签):
 				需要被添加鼠标动作监听器的对象,如果是字符串则会以该字符串作为id查找对象*
-			*fun(function):	
+			*fun(function):
 				执行的回调函数,回调函数的参数为包含如下五个属性与若干函数的对象:*
 					1)cx(number类型):相对于canvas左上角坐标的x值
 					2)cy(number类型):相对于canvas左上角坐标的y值
@@ -134,6 +134,19 @@
 			var p = catCan.getArea(0,0);//获取0号动画0号图层的位置信息
 			var h = catCan.getArea(0,0).height;//获取0号动画0号图层的高度信息
 			console.log(p+"~"+h);
+	---------------
+	addKeyListener(fun):
+		概述:
+			添加一个键盘响应器,当按下键盘上的按键时会执行回调函数
+		参数:
+			*fun(function):
+				执行的回调函数,包含如下两个参数:
+					1)type(string类型):keydown或keyup
+					2)key(string类型):按下的按键
+		示例:
+			catCan.addKeyListener(function(type,key) {
+				console.log("<"+type+">,<"+key+">");
+			});//按下或抬起键盘上的按键时会打印用户的操作
 数据处理:
 	query(str,flag):
 		概述:
@@ -250,7 +263,7 @@ reload*→	init*	getArea*→	addListener*	←push*
 修复了queryDS方法对于没有函数的方法会报错的问题(2021.2.17)
 添加了根数据域(2021.2.18)
 重写动画函数结构与动画各个属性(2021.2.18)
-
+添加了键盘响应器(2021.3.29)
 
 
 
