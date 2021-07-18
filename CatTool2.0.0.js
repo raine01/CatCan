@@ -1,3 +1,4 @@
+//drawFloor
 CatTool.drawFloor = function(para,ani,ctx,ds) {
 	/*
 		参数:
@@ -231,8 +232,8 @@ CatTool.aboutHp = function(para,ani,ctx,ds) {
 				]
 			}
 		参数:
-			1.class名字
-			2.字体大小
+			1.class名字,默认为空
+			2.字体大小,为空不显示
 			3.绘制x值
 			4.绘制y值
 	*/
@@ -272,4 +273,18 @@ CatTool.aboutHp = function(para,ani,ctx,ds) {
 		data:data,
 		fun:showHp
 	};
+};
+
+//barrage
+CatTool.barrage = function(para,ani,ctx,ds) {
+	/*
+		与aboutHp搭配使用,原理为给共用数据域赋值
+		参数:
+			1.class名字
+			2.x轴速度
+			3.y轴速度
+			4.血量变化
+			5.频率(帧为单位)
+	*/
+
 };
