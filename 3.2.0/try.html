@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>尝试</title>
+	<style type="text/css">
+		canvas {
+			border: 1px solid black;
+		}
+		div {
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div id="catCan">
+		<!-- 插canvas的地方 -->
+	</div>
+</body>
+<script type="text/javascript" src="catCanFrameWork3.2.0.js"></script>
+<script type="text/javascript" src="../CatTool2.0.0.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		var catCan = new CatCan("catCan",dataJson,"flag","xy");
+		//地板地图
+		var mapGround = [//地图,按x1从小到大排序
+			[30,1230,560],
+			[150,550,300],
+			[210,800,140],
+			[370,800,100],
+			[600,1100,400]
+		];
+		var map = catCan.dataSpace.map = [];
+		for(var i in mapGround) {//赋值
+			map.push(mapGround[i]);
+		}
+
+		//陷阱区域
+		var aboutHp = {
+			raine:[
+				[0,501,100,600,-0.1],
+				[100,501,200,600,0.1]
+			],
+			class2:[
+				[0,0,100,100,-0.1],
+				[100,0,200,100,-10]
+			]
+		};
+		catCan.dataSpace.aboutHp = aboutHp;
+
+		//贴图列表
+		catCan.dataSpace.imgs = {
+			leftwait:[1,2],//左待机
+			leftmove:[3,4],//左走路
+			rightwait:[5,6],//右待机
+			rightmove:[7,8]//右走路
+		};
+		for(i in catCan.dataSpace.imgs) {
+			catCan.dataSpace.imgs[i].flag = 0;
+		}
+
+		catCan.play(0);
+	};
+	dataJson = {
+		width:1300,
+		height:600,
+		pic:[
+			"oulleft.png",
+			"oulright.png"
+		],
+		img:[
+			[0,0,0,0,0],//空
+			[0,0,0,60,60],//左待机1
+			[0,60,0,60,60],//左待机2
+			[0,0,60,60,60],//左走路1
+			[0,60,60,60,60],//左走路2
+			[1,0,0,60,60],//右待机1
+			[1,60,0,60,60],//右待机2
+			[1,0,60,60,60],//右走路1
+			[1,60,60,60,60],//右走路2
+		],
+		animation:[
+			{//地图
+				ci:0,
+				f:"drawFloor();drawArea(raine);"
+			},{//状态栏
+				rt:1,
+				ci:0,
+			},{//角色
+				rt:1,
+				ci:5,
+				dx:290,
+				dy:20,
+				tx:320,
+				ty:80,
+				f:"moveOnFloor(7,1);aboutHp(raine,30,-50,-90);changeImg(15);"
+			}
+		],
+		playList:[
+			[3000,0,2]
+		]
+	};
+</script>
+</html>
